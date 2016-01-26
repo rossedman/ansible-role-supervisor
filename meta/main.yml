@@ -1,0 +1,24 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: rossedman
+  description: Supervisor process manager for RHEL/CentOS and Debian/Ubuntu
+  company: "Sntinel"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 1.4
+  platforms:
+  - name: EL
+    versions:
+    - 6
+    - 7
+  - name: Ubuntu
+    versions:
+    - all
+  - name: Debian
+    versions:
+    - all
+  categories:
+    - processes
+    - supervisor
+    - python

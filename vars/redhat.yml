@@ -1,0 +1,4 @@
+---
+supervisor_conf_path: /etc/supervisord.conf
+supervisor_path: /etc/supervisor.d
+supervisor_service: supervisord

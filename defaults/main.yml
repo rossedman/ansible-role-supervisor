@@ -1,0 +1,17 @@
+---
+# configure how supervisord runs, any options can
+# be added here as long as they are part of the supervisord.conf
+supervisor_supervisord_options:
+  - { option: logfile_maxbytes, value: 50MB }
+  - { option: logfile_backups, value: 10 }
+  - { option: loglevel, value: info }
+  - { option: nodaemon, value: false }
+
+# enable inet portal, this is a frontend
+# interface for working with supervisor
+# once enabled this port must be added to
+# your firewall though
+supervisor_inet_enable: yes
+supervisor_inet_username: admin
+supervisor_inet_password: password
+supervisor_inet_port: 9001

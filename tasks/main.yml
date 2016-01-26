@@ -1,0 +1,47 @@
+---
+- include_vars: redhat.yml
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- include_vars: debian.yml
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+
+- name: install supervisor on ubuntu/debian
+  apt: name=supervisor state=present update_cache=yes
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+
+- name: install supervisor on redhat/centos
+  yum: name={{item}} state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  with_items:
+    - epel-release
+    - libselinux-python
+    - supervisor
+
+- name: create supervisor directory
+  file: path={{ supervisor_path }} state=directory
+
+- name: create default supervisor.conf
+  copy: src=supervisord.conf dest={{ supervisor_conf_path }}
+
+- name: enable inet portal
+  ini_file: 
+    dest: "{{ supervisor_conf_path }}"
+    section: inet_http_server 
+    option: "{{ item.option }}" 
+    value: "{{ item.value }}"
+  with_items:
+    - { option: port, value: "{{ supervisor_inet_port }}" }
+    - { option: username, value: "{{ supervisor_inet_username }}" }
+    - { option: password, value: "{{ supervisor_inet_password }}" }
+  when: supervisor_inet_enable
+
+- name: configure supervisord
+  ini_file:
+    dest: "{{ supervisor_conf_path }}"
+    section: supervisord
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  with_items: supervisor_supervisord_options
+
+- name: start supervisor
+  service: name={{ supervisor_service }} enabled=yes state=started
